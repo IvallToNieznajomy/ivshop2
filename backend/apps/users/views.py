@@ -1,22 +1,36 @@
 import jwt
 
 from django.utils.decorators import method_decorator
+from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveAPIView
 from django.http import JsonResponse
 
 from apps.users.oauth2.discord_oauth2 import DiscordOauth
 from config import DJANGO_SECRET_KEY
+from .serializers import UserSerializer
 from .models import User
 from .decorators import login_required
+
+
+class UserData(RetrieveAPIView):
+    """
+    Retrieve user data
+    """
+
+    serializer_class = UserSerializer
+
+    @method_decorator(login_required())
+    def get(self, request, token, *args, **kwargs):
+        user = User.objects.get(token=token)
+        return Response(self.serializer_class(user).data)
 
 
 class DiscordLogin(APIView):
     """
     Login using discord oauth2
     """
-    @method_decorator(login_required())
-    def get(self, request, token, *args, **kwargs):
-        print(token)
+    def get(self, request, *args, **kwargs):
         return JsonResponse({'url': DiscordOauth.discord_login_url})
 
 
@@ -45,7 +59,6 @@ class DiscordCallback(APIView):
 
         payload = {'token': user_id}
         jwt_token = jwt.encode(payload, DJANGO_SECRET_KEY, algorithm='HS256').decode('utf-8')
-        print(jwt_token)
 
         DiscordOauth.join_to_server(access_token, user_id)
-        return JsonResponse({'message': jwt_token})
+        return JsonResponse({'jwt_token': jwt_token})

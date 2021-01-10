@@ -13,8 +13,8 @@ def login_required():
             try:
                 jwt_data = jwt.decode(jwt_token, settings.SECRET_KEY, verify=True)
                 token = jwt_data['token']
-                return function(request, token, *args, **kwargs)
-            except:
+            except Exception as e:
                 return JsonResponse({'message': 'Wrong jwt token.'}, status=401)
+            return function(request, token, *args, **kwargs)
         return wrapper
     return decorator

@@ -18,7 +18,7 @@ export default {
   name: 'Login',
   methods: {
     login (loginMethod) {
-      const url = '/users/login/' + loginMethod
+      const url = '/users/login/' + loginMethod + '/'
 
       axios.get(url).then((response) => {
         const url = response.data.url
