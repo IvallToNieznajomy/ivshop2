@@ -20,5 +20,5 @@ from config import DJANGO_ADMIN_URL
 
 urlpatterns = [
     path(f'{DJANGO_ADMIN_URL}/', admin.site.urls),
-    path('users', include('apps.users.urls'))
+    path('users/', include('apps.users.urls'))
 ]

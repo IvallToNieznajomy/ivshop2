@@ -1,4 +1,7 @@
 import TAlert from 'vue-tailwind/dist/t-alert'
+import {
+  TCard
+} from 'vue-tailwind/dist/components'
 
 export const settings = {
   't-alert': {
@@ -25,6 +28,30 @@ export const settings = {
           wrapper: 'bg-green-50 border-green-500',
           body: 'text-green-700',
           close: 'text-green-500 hover:bg-green-200'
+        }
+      }
+    }
+  },
+  't-card': {
+    component: TCard,
+    props: {
+      fixedClasses: {
+        wrapper: 'border rounded shadow-sm ',
+        body: 'p-3',
+        header: 'border-b p-3 rounded-t',
+        footer: 'border-t p-3 rounded-b'
+      },
+      classes: {
+        wrapper: 'bg-white border-gray-100 shadow',
+        body: '',
+        header: 'border-gray-100',
+        footer: 'border-gray-100'
+      },
+      variants: {
+        danger: {
+          wrapper: 'bg-red-50 text-red-700 border-red-200',
+          header: 'border-red-200 text-red-700',
+          footer: 'border-red-200 text-red-700'
         }
       }
     }

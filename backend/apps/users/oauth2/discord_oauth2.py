@@ -13,37 +13,38 @@ class DiscordOauth(object):
 
     scope = "identify guilds.join"
     if settings.DEBUG:
-        redirect_uri = f"http://{LOCAL_DOMAIN}/oauth_callback"
+        redirect_uri = f"http://{LOCAL_DOMAIN}/discord/callback"
     else:
-        redirect_uri = f"https://{WEBSITE_DOMAIN}/oauth_callback"
+        redirect_uri = f"https://{WEBSITE_DOMAIN}/discord/callback"
 
     discord_login_url = "https://discordapp.com/api/oauth2/authorize?client_id={}&redirect_uri={}&response_type=code&scope={}".format(
         client_id, redirect_uri, scope)
     discord_token_url = "https://discordapp.com/api/oauth2/token"
     discord_api_url = "https://discordapp.com/api"
+    discord_cdn_url = "https://cdn.discordapp.com"
 
     @staticmethod
     def get_access_token(code):
         payload = {
-            'client_id': Oauth.client_id,
-            'client_secret': Oauth.client_secret,
+            'client_id': DiscordOauth.client_id,
+            'client_secret': DiscordOauth.client_secret,
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': Oauth.redirect_uri,
-            'scope': Oauth.scope
+            'redirect_uri': DiscordOauth.redirect_uri,
+            'scope': DiscordOauth.scope
         }
 
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        access_token = requests.post(url=Oauth.discord_token_url, data=payload, headers=headers)
+        access_token = requests.post(url=DiscordOauth.discord_token_url, data=payload, headers=headers)
         json = access_token.json()
         return json.get("access_token")
 
     @staticmethod
     def get_user_json(access_token):
-        url = Oauth.discord_api_url + "/users/@me"
+        url = DiscordOauth.discord_api_url + "/users/@me"
 
         headers = {
             "Authorization": "Bearer {}".format(access_token)
@@ -53,7 +54,7 @@ class DiscordOauth(object):
         return user_json
 
     def join_to_server(access_token, user_id):
-        url = Oauth.discord_api_url + f'/guilds/{GUILD_ID}/members/{user_id}'
+        url = DiscordOauth.discord_api_url + f'/guilds/{GUILD_ID}/members/{user_id}'
 
         headers = {
             "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
@@ -63,4 +64,11 @@ class DiscordOauth(object):
         data = {
             "access_token": access_token
         }
-        requests.put(url=url, headers=headers, json=data).json()
+        requests.put(url=url, headers=headers, json=data)
+
+    def get_avatar_url(user_json):
+        user_id = user_json.get("id")
+        avatar_hash = user_json.get("avatar")
+
+        avatar_url = f'{DiscordOauth.discord_cdn_url}/avatars/{user_id}/{avatar_hash}.png'
+        return avatar_url
