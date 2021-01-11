@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    strona główna test
+
   </div>
 </template>
 

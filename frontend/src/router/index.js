@@ -5,6 +5,7 @@ import Faq from '../views/Faq.vue'
 import Login from '../views/Login.vue'
 import Error500 from '../views/Error500.vue'
 import DiscordCallback from '../views/DiscordCallback.vue'
+import Panel from '../views/Panel.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/discord/callback',
     name: 'Discord oauth2 callback',
     component: DiscordCallback
+  },
+  {
+    path: '/panel',
+    name: 'Panel',
+    component: Panel
   }
 ]
 
