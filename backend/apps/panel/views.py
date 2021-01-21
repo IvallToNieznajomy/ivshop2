@@ -13,7 +13,7 @@ from .models import Shop
 
 class ShopsViewSet(viewsets.ViewSet):
     """
-    A simple ViewSet for listing user shops.
+    A simple ViewSet for listing user shops or retrieve shop by id.
     """
     @method_decorator(login_required())
     def list(self, request, token, *args, **kwargs):
@@ -22,6 +22,13 @@ class ShopsViewSet(viewsets.ViewSet):
         serializer = ShopSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @method_decorator(login_required())
+    def retrieve(self, request, token, *args, **kwargs):
+        pk = kwargs['id']
+        user = User.objects.get(token=token)
+        queryset = Shop.objects.get(id=pk)
+        serializer = ShopSerializer(queryset)
+        return Response(serializer.data)
 
 class CreateShop(CreateAPIView):
     """

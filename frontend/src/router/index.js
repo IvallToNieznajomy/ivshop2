@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import Error500 from '../views/Error500.vue'
 import DiscordCallback from '../views/DiscordCallback.vue'
 import Panel from '../views/Panel.vue'
+import SelectShop from '../views/SelectShop.vue'
 
 Vue.use(VueRouter)
 
@@ -36,7 +37,13 @@ const routes = [
     component: DiscordCallback
   },
   {
-    path: '/panel',
+    path: '/select_shop',
+    name: 'Select shop to enter to panel',
+    component: SelectShop,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/panel/:id',
     name: 'Panel',
     component: Panel
   }
@@ -46,6 +53,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('accessToken')) {
+      next()
+    } else {
+      next('/auth/not-allowed')
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
