@@ -7,8 +7,8 @@ from apps.users.decorators import login_required
 from apps.users.models import User
 from rest_framework.response import Response
 
-from .serializers import ShopSerializer
-from .models import Shop
+from .serializers import ShopSerializer, ServerSerializer
+from .models import Shop, Server
 
 
 class ShopsViewSet(viewsets.ViewSet):
@@ -25,10 +25,29 @@ class ShopsViewSet(viewsets.ViewSet):
     @method_decorator(login_required())
     def retrieve(self, request, token, *args, **kwargs):
         pk = kwargs['id']
-        user = User.objects.get(token=token)
         queryset = Shop.objects.get(id=pk)
         serializer = ShopSerializer(queryset)
         return Response(serializer.data)
+
+
+class ServersViewSet(viewsets.ViewSet):
+    """
+    A simple ViewSet for listing user servers or retrieve server by id.
+    """
+    @method_decorator(login_required())
+    def list(self, request, token, *args, **kwargs):
+        user = User.objects.get(token=token)
+        queryset = Server.objects.filter(shop__owner=user)
+        serializer = ServerSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @method_decorator(login_required())
+    def retrieve(self, request, token, *args, **kwargs):
+        pk = kwargs['id']
+        queryset = Server.objects.get(id=pk)
+        serializer = ServerSerializer(queryset)
+        return Response(serializer.data)
+
 
 class CreateShop(CreateAPIView):
     """

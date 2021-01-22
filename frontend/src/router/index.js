@@ -7,6 +7,7 @@ import Error500 from '../views/Error500.vue'
 import DiscordCallback from '../views/DiscordCallback.vue'
 import Panel from '../views/Panel.vue'
 import SelectShop from '../views/SelectShop.vue'
+import PanelServers from '../views/PanelServers.vue'
 
 Vue.use(VueRouter)
 
@@ -45,7 +46,15 @@ const routes = [
   {
     path: '/panel/:id',
     name: 'Panel',
-    component: Panel
+    component: Panel,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '/servers',
+        name: 'Panel Servers',
+        component: 'PanelServers'
+      }
+    ]
   }
 ]
 
