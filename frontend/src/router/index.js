@@ -50,9 +50,9 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: '/servers',
+        path: 'servers',
         name: 'Panel Servers',
-        component: 'PanelServers'
+        component: PanelServers
       }
     ]
   }

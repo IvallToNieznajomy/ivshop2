@@ -65,10 +65,6 @@ export default {
   },
   methods: {
     getShops () {
-      if (!localStorage.getItem('accessToken')) {
-        this.$router.push('500')
-      }
-
       axios.get('/panel/shops/user_shops/').then((response) => {
         this.shops = response.data
       }).catch((error) => {

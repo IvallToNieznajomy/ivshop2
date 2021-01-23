@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar v-if="$route.name != 'Panel'"/>
+    <Navbar v-if="!$route.params.id"/>
     <router-view/>
   </div>
 </template>
